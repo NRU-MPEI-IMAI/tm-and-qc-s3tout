@@ -1,0 +1,53 @@
+name: binary increment
+source code: |-
+  # 0^{n}1^{n}2^{n}
+  input: '01'
+  blank: ' '
+  start state: start
+  table:
+    # finding +
+    start:
+      0: {write: 'x', R: findone}
+      [1, 2]: {L: failclear}
+      ' ': {R: complete}
+    # finding 0
+    findzero:
+      0: {write: 'x', R: findone}
+      [1, 2, 'x']: L
+      ' ': {R: checkcomplete}
+    # finding and replacing 1  
+    findone:
+      [0, 'x']: R
+      1: {write: 'x', R: findtwo}
+      [2, ' ']: {L: failclear}
+    # finding and replacing 2
+    findtwo:
+      [1, 'x']: R
+      [0, ' ']: {L: failclear}
+      2: {write: 'x', L: findzero}
+    # if fail go left
+    failclear:
+      [0, 1, 2, 'x']: L
+      ' ': {R : fail}
+    # if fail go right, clear and write 0 
+    fail:
+      [0, 1, 2, 'x']: {write: ' ', R}
+      ' ': {write: 0, L: done}
+    checkcomplete:
+      'x': {write: ' ', R}
+      [0, 1, 2]: {write: ' ', R: fail}
+      ' ': {write: 1, L: done}
+    complete:
+      [0, 1, 2, 'x']: {write: ' ', R}
+      ' ': {write: 1, L: done}
+    done:
+positions:
+  start: {x: 295.33, y: 262.9, fixed: false}
+  findzero: {x: 318.58, y: 340.46, fixed: false}
+  findone: {x: 398.93, y: 210.28, fixed: false}
+  findtwo: {x: 245.36, y: 210.5, fixed: false}
+  failclear: {x: 329.1, y: 98.01, fixed: false}
+  fail: {x: 479.41, y: 127.5, fixed: false}
+  checkcomplete: {x: 446.28, y: 272.61, fixed: false}
+  complete: {x: 442.65, y: 348.18, fixed: false}
+  done: {x: 570, y: 250}

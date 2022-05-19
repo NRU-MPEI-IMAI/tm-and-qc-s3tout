@@ -1,0 +1,60 @@
+name: binary increment
+source code: |-
+  # 0^{n}1^{n}2^{n}
+  input: '{{}()'
+  blank: ' '
+  start state: start
+  table:
+    # finding +
+    start:
+      ['(', '{', '[']: {R: left}
+      [')', '}', ']']: {L: failclear}
+      ' ': {R: complete}
+    # left SKOBKA :) 
+    left:
+      ['(', '{', '[', 'x']: R
+      ')': {write: 'x', L: rightone}
+      ']': {write: 'x', L: righttwo}
+      '}': {write: 'x', L: rightthree}
+      ' ': {L: failcheck}
+    # right SKOBKA
+    rightone:
+      '(': {write: 'x', R: left}
+      'x': L
+      ['[', '{']: {L: failclear}
+      ' ': {R: failclear}
+    righttwo:
+      '[': {write: 'x', R: left}
+      'x': L
+      ['(', '{']: {L: failclear}
+      ' ': {R: failclear}
+    rightthree:
+      '{': {write: 'x', R: left}
+      'x': L
+      ['[', '(']: {L: failclear}
+      ' ': {R: failclear}
+    failcheck:
+      ['(', '[', '{']: {L: failclear}
+      'x': L
+      ' ': {R: complete}
+    failclear:
+      ['(', ')', '[', ']', '{', '}', 'x']: L
+      ' ': {R: fail}
+    fail:
+      ['(', ')', '[', ']', '{', '}', 'x']: {write: ' ', R}
+      ' ': {write: 0, L: done}
+    complete:
+      'x': {write: ' ', R}
+      ' ': {write: '1', L: done}
+    done:
+positions:
+  start: {x: 293.93, y: 288.25, fixed: false}
+  left: {x: 316.56, y: 434.47, fixed: false}
+  rightone: {x: 398.77, y: 316.8, fixed: false}
+  righttwo: {x: 242.88, y: 303.06, fixed: false}
+  rightthree: {x: 430.74, y: 338, fixed: false}
+  failcheck: {x: 342.5, y: 308.91, fixed: false}
+  failclear: {x: 354.4, y: 178.9, fixed: false}
+  fail: {x: 492.01, y: 112.89, fixed: false}
+  complete: {x: 431.54, y: 197.37, fixed: false}
+  done: {x: 570, y: 250}

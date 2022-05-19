@@ -1,0 +1,127 @@
+name: binary increment
+source code: |-
+  # 0^{n}1^{n}2^{n}
+  input: '11 110 1'
+  blank: ' '
+  start state: start
+  table:
+    # starting
+    start:
+      ' ': {L: done}
+      [1, 0]: {L: backstart}
+    backstart:
+      ' ': {R: min}
+    # set min word 
+    min:
+      1: {write: 'x', L: leftcor}
+      0: {write: 'y', L: leftcor}
+      ['x', 'y']: R
+      ' ': {R: checklasttwo}
+    # going to left corner of word
+    leftcor:
+      ' ': {L: length}
+      [1, 0, 'x', 'y']: L
+    # set length 
+    length:
+      [' ', 'p']: {write: 1, L: cornerset} 
+      1: L
+    # corner for length
+    cornerset:
+      ' ': {write: 'p', R}
+      1: {R: skiplength}
+    # getting back to min 
+    skiplength:
+      1: R
+      ' ': {R: min}
+    
+    # check word for min size
+    checkword: 
+      1: {write: 'z', L: findlength}
+      0: {write: 'w', L: findlength}
+      ['z', 'w']: R
+      ' ': {R: checklast}
+    # check word and minword length
+    findlength:
+      [' ', 'x', 'y', 'z', 'w', 'l']: L
+      1: {write: 'l', R: backtocheck}
+      'p': {R: findclearword}
+    # back to checkword
+    backtocheck:
+      [' ', 'x', 'y', 'l']: R
+      ['z', 'w']: {R: checkword}
+      1: {write: 'z', L: findlength}
+      0: {write: 'w', L: findlength}
+    # if word more than min -> clear 
+    findclearword:
+      'l': {write: 1, R}
+      [' ', 'x', 'y']: R
+      ['z', 'w']: {write: ' ', R: clearword}
+    clearword:
+      ' ': {R: checklasttwo}
+      ['z', 'w', 1, 0]: {write: ' ', R}
+    
+    # check minimum of word 
+    clearmin:
+      'z': {write: 1, L}
+      'w': {write: 0, L}
+      ['x', 'y', 'l', 1]: {write: ' ', L}
+      ' ': L
+      'p': {write: ' ', R: backtonewmin}
+    # back to new min
+    backtonewmin:
+      ' ': R
+      [1, 0]: {L: backstart}
+
+      
+    # if last word 
+    checklast:
+      [1, 0]: {L: clearmin}
+      ' ': {L: answer}
+    # getting answer
+    answer:
+      'z': {write: 1, L}
+      'w': {write: 0, L}
+      ['x', 'y', 'l', 1]: {write: ' ', L}
+      ' ': L
+      'p': {write: ' ', R: backtomin}
+    backtomin:
+      ' ': R
+      [1, 0]: {L: done}
+      
+    # if last word 
+    checklasttwo:
+      [1, 0]: {L: gettocheck}
+      ' ': {L: answertwo}
+    gettocheck:
+      ' ': {R: checkword}
+      
+    # getting answer
+    answertwo:
+      'x': {write: 1, L}
+      'y': {write: 0, L}
+      ['z', 'w', 'l', 1]: {write: ' ', L}
+      ' ': L
+      'p': {write: ' ', R: backtomin}
+    done:
+positions:
+  start: {x: 681.74, y: 131.43, fixed: false}
+  backstart: {x: 543.49, y: 98.81, fixed: false}
+  min: {x: 406.93, y: 173.14, fixed: false}
+  leftcor: {x: 273.17, y: 100.89, fixed: false}
+  length: {x: 150.75, y: 20, fixed: false}
+  cornerset: {x: 292.29, y: 20, fixed: false}
+  skiplength: {x: 433.84, y: 20, fixed: false}
+  checkword: {x: 193.29, y: 294.37, fixed: false}
+  findlength: {x: 60.91, y: 249.66, fixed: false}
+  backtocheck: {x: 66.92, y: 387.43, fixed: false}
+  findclearword: {x: 150.4, y: 385.1, fixed: false}
+  clearword: {x: 288.22, y: 473.13, fixed: false}
+  clearmin: {x: 505.67, y: 257.27, fixed: false}
+  backtonewmin: {x: 650.92, y: 204.64, fixed: false}
+  checklast: {x: 356.79, y: 306.22, fixed: false}
+  answer: {x: 491.26, y: 401.08, fixed: false}
+  backtomin: {x: 637.98, y: 401.88, fixed: false}
+  checklasttwo: {x: 404.14, y: 355.4, fixed: false}
+  gettocheck: {x: 270.61, y: 413.33, fixed: false}
+  answertwo: {x: 512.24, y: 480, fixed: false}
+  done: {x: 570, y: 250}

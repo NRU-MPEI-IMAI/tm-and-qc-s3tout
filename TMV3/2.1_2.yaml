@@ -1,0 +1,55 @@
+name: binary increment
+source code: |-
+  # Multyply
+  input: '11*1'
+  blank: ' '
+  start state: right
+  table:
+    # finding *
+    right:
+      1: R
+      '*': {R: carry}
+    # finding 1 in right 
+    carry:
+      1: {write: 0, L: go}
+      0: R
+      ' ': {L: last}
+    # replacing 1 to left 
+    go:
+      ' ': {R: copynext}
+      [0, '*', 1, 'x']: L 
+    # copy going right 
+    copynext:
+      1: {write: 0, L: copy}
+      ['x', 0]: R
+      '*': {L: onesback}
+    # copy going left 
+    copy:
+      1: {write: 0, L}
+      ' ': {write: 'x', R: copynext}
+      ['x', 0]: L
+    # replacing 0 to 1 left
+    onesback:
+      0: {write: 1, L}
+      x: {R: right}
+      ' ': {R: erorr}
+    # if first is nothing
+    erorr:
+      [1, 0, 'x', '*']: R
+      ' ': {L: last}
+    # clearing zeros
+    last:
+      [0, '*', '1']: {write: ' ', L}
+      'x': {write: 1, L}
+      ' ': {R: done}
+    done:
+positions:
+  right: {x: 230, y: 250}
+  carry: {x: 400, y: 250}
+  go: {x: 370.75, y: 95.03, fixed: false}
+  copynext: {x: 316.23, y: 220.89, fixed: false}
+  copy: {x: 440.09, y: 142.43, fixed: false}
+  onesback: {x: 295.24, y: 370.39, fixed: false}
+  erorr: {x: 399.4, y: 469.53, fixed: false}
+  last: {x: 495.27, y: 364.26, fixed: false}
+  done: {x: 570, y: 250}
